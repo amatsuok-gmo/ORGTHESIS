@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #d0d0d0;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12pt;
+      color: #1a1a18;
+    }
+
+    /* The page itself — 8.5 x 11 inches */
+    .page {
+      width: 8.5in;
+      height: 11in;
+      margin: 0.5in auto;
+      background: #ffffff;
+      padding: 1in;           /* 1-inch margins on all sides — adjust as needed */
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* ── Typography ── */
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28pt;
+      font-weight: 400;
+      line-height: 1.2;
+      color: #1a1a18;
+      margin-bottom: 0.15in;
+    }
+
+    h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20pt;
+      font-weight: 400;
+      line-height: 1.25;
+      color: #1a1a18;
+      margin-bottom: 0.1in;
+    }
+
+    h3 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13pt;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #f7941d;          /* teal accent — matches chart colors */
+      margin-bottom: 0.08in;
+    }
+
+    p {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11pt;
+      font-weight: 400;
+      line-height: 1.7;
+      color: #1a1a18;
+      margin-bottom: 0.15in;
+    }
+/*styles for map overlay*/
+	  
+	  .map-wrap {
+  position: relative;
+  width: 100%;
+  background: #fff;
+  border: 0.5px solid #dddbd5;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.map-wrap img {
+  width: 100%;
+  display: block;
+}
+.map-wrap svg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+}
+.map-tooltip {
+  position: absolute;
+  background: #fff;
+  border: 0.5px solid #dddbd5;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  white-space: nowrap;
+  z-index: 10;
+}
+.map-tooltip strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1a1a18;
+}
+.map-tooltip span { color: #888882; }
+.map-legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 0.1in;
+  font-size: 11px;
+  color: #888882;
+}
+	/*stuff from data visualization*/
+	  .stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 2rem;
+}
+.stat-card {
+  background: #f7f5f0;
+  border: 0.5px solid #dddbd5;
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+}
+.stat-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28pt;
+  font-weight: 400;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-lbl {
+  font-size: 9pt;
+  color: #888882;
+  line-height: 1.4;
+}
+.chart-card {
+  background: #fff;
+  border: 0.5px solid #dddbd5;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 1.25rem;
+  font-size: 9pt;
+  color: #666660;
+}
+.legend span { display: flex; align-items: center; gap: 5px; }
+.swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.chart-wrap { position: relative; width: 100%; height: 280px; }
+	/*end stuff from dvis*/  
+    /* Eyebrow label — small all-caps label above a title */
+    .eyebrow {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 9pt;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #67963a;
+      margin-bottom: 0.05in;
+    }
+
+    /* Muted / caption text */
+    .caption {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 9pt;
+      color: #888882;
+      line-height: 1.5;
+      font-style: italic;
+      margin-top: -0.1in;
+      margin-bottom: 0.15in;
+    }
+
+    /* Divider line */
+    hr {
+      border: none;
+      border-top: 0.5px solid #dddbd5;
+      margin: 0.2in 0;
+    }
+	  
+	/* —— Heatmap Styles —— */
+	.heatmap-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 9pt;
+}
+.heatmap-table th {
+  font-weight: 500;
+  font-size: 8pt;
+  color: #888882;
+  padding: 5px 6px;
+  text-align: center;
+  white-space: nowrap;
+}
+.heatmap-table th.row-header {
+  text-align: left;
+  min-width: 120px;
+}
+.heatmap-table td {
+  padding: 5px 6px;
+  text-align: center;
+  border-radius: 4px;
+  font-size: 9pt;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.heatmap-table td.label {
+  text-align: left;
+  font-weight: 400;
+  color: #1a1a18;
+  font-size: 9pt;
+}
+.heatmap-table td.n {
+  color: #888882;
+  font-size: 8pt;
+  font-weight: 400;
+}
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 0.1in;
+  font-size: 8pt;
+  color: #888882;
+}
+.heatmap-legend-grad {
+  width: 100px;
+  height: 8px;
+  border-radius: 3px;
+  background: linear-gradient(to right, #E1F5EE, #1D9E75, #085041);
+}
+.heatmap-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.heatmap-table {
+  font-size: 7.5pt;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.heatmap-table th {
+  font-size: 7pt;
+  padding: 4px 3px;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.3;
+}
+
+.heatmap-table th.row-header {
+  width: 110px;
+}
+
+.heatmap-table td {
+  font-size: 7.5pt;
+  padding: 4px 3px;
+}
+
+.heatmap-table td.label {
+  font-size: 7.5pt;
+  white-space: normal;
+  word-break: break-word;
+}
+
+    /* ── Print styles — hides browser chrome, keeps page breaks clean ── */
+    @media print {
+      body {
+        background: none;
+      }
+      .page {
+        width: 100%;
+        min-height: auto;
+        margin: 0;
+        padding: 1in;
+        box-shadow: none;
+        page-break-after: always;
+      }
+    }
+	  
+	  /*–– likert scale --*/
+	  
+	  .diverging-card {
+  background: #fff;
+  border: 0.5px solid #dddbd5;
+  border-radius: 10px;
+  padding: 0.15in 0.2in 0.12in;
+  margin-bottom: 0.12in;
+}
+.diverging-card h4 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9pt;
+  font-weight: 500;
+  color: #1a1a18;
+  margin-bottom: 8px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.diverging-wrap {
+  position: relative;
+  width: 100%;
+}
+.div-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 8pt;
+  color: #666660;
+}
+.div-legend span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.div-legend .sw {
+  width: 9px; height: 9px;
+  border-radius: 2px;
+  display: inline-block;
+}
+	  
+	  /*———footer things——*/
+	  
+	  .page {
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content {
+  flex: 1;
+}
+
+.page-footer {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9pt;
+  color: #888882;
+  border-top: 0.5px solid #dddbd5;
+  padding-top: 0.1in;
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+	  /*-- styles for donut schemes --*/
+	  
+	  .demo-page {
+  display: flex;
+  flex-direction: column;
+  gap: 0.18in;
+}
+.donuts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.15in;
+}
+.donut-card {
+  background: #fff;
+  border: 0.5px solid #dddbd5;
+  border-radius: 10px;
+  padding: 0.18in 0.2in 0.12in;
+}
+.donut-card h4 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9pt;
+  font-weight: 500;
+  color: #1a1a18;
+  margin-bottom: 6px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.donut-wrap {
+  position: relative;
+  width: 100%;
+  height: 160px;
+}
+.stacked-card {
+  background: #fff;
+  border: 0.5px solid #dddbd5;
+  border-radius: 10px;
+  padding: 0.18in 0.2in 0.12in;
+}
+.stacked-card h4 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9pt;
+  font-weight: 500;
+  color: #1a1a18;
+  margin-bottom: 6px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.stacked-wrap {
+  position: relative;
+  width: 100%;
+  height: 210px;
+}
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+  font-size: 8pt;
+  color: #666660;
+}
+.chart-legend span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.chart-legend .sw {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  display: inline-block;
+}
+	  
+/* styles for wordclouds */
+.wc-section {
+  margin-bottom: 0.2in;
+}
+.wc-cloud-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9pt;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #888882;
+  margin-bottom: 6px;
+}
+.wc-box {
+  background: #fff;
+  border: 1px solid #dddbd5;
+  border-radius: 10px;
+  padding: 1rem 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 15px;
+  line-height: 1.8;
+}
+
+  </style>
+</head>
+<body>
+	
+	
+<div class="page" style="padding: 0;">
+  <img src="RA Aaron Study Room Report.png" style="width: 100%; height: 11in; object-fit: cover;">
+</div>
+	
+  <div class="page">
+
+    <!-- ════════════════════════════════
+         START EDITING YOUR CONTENT HERE
+         ════════════════════════════════ -->
+    <h2>Introduction</h2>
+
+    <p>In my four years at Pitzer I have been exposed to many study spaces across the 5Cs. I have heard complaints about Pitzer study rooms, but I wanted to discover how people really used study rooms and if there was a desire to improve. This data has been collected as part of my senior thesis project in Organizational Studies to discover what Pitzer students actually want in their study spaces in order to make them more productive and successful students. This report will shine light on the needs of students within on-campus study spaces and how .</p>
+	  <hr>
+
+    <h3>What is organizational Studies ?</h3>
+
+    <p>Organizational studies put simply is the study of how humans organize themselves and the systems that they operate within. Specifically, Organizational Studies is an interdisciplinary field combining Political Studies, Sociology, Psychology and Economics to analyze how organizations operate, how they affect society, and what their lifecycle is like: how they are created, maintained, and modified. An organization could mean anything from a Fortune 500 company with a stratified hierarchy of positions, or it could mean your friend group — in this case the organization I am examining is Pitzer. Within our organizations that we participate in there are many different factors that impact the organizational dynamic — power imbalances, physical environment, interpersonal conflicts, individual identities, and much more.</p> 
+	
+	<p> Connecting it back to the focus of my thesis project examining student study spaces, physical spaces are not only important to how people create their emotional and intellectual realities, but directly correlates to where and how people organize. It is well understood within psycology that the built environment — or manmade environment — is constantly impacting our autonomic and central nervous systems. It has the power to influence not only behavioral changes, but even cellular and molecular alterations (<a href="https://doi.org/10.1016/j.jenvp.2019.101344">Bower et al.</a>). Things as simple as brightness and color of lights can impact someone's mood (<a href="https://doi-org.ccl.idm.oclc.org/10.1080/00140130600858142">Küller et al.</a>). These subtilties show how important thoughtful student spaces are in creating belonging, academic success and a sustained love of Pitzer after graduation.</p>
+	
+<footer class="page-footer">
+    <span style="color: #054F63">Keep reading to learn more about this studies methodology and data collection results.</span>
+    <span></span>
+    <span>Page 1</span>
+  </footer>
+	  
+</div><!-- end page 1 -->
+	
+  <div class="page">
+
+    <!-- Page 2 content here -->
+	  <h2>Data Collection and Rationale</h2>
+	  <hr>
+<h3>Survey design</h3>
+	<p>The following data was collected through a survey designed in collaboration with Professor of Organizational Studies Barbara Junisbai and Associate Dean of Residence Life and Community Standards Joe Koluder.</p> 
+	
+	<p>Going through three revisions, including reacting to feedback from Joe and Barbara, the survey gathered data using a combination of short response, long response, 5-point Likert scale, multiple choice and single choice questions. The survey was hosted using Microsoft Forms and <strong>responses were collected on a fully anonymous basis.</strong> However, access to the form was limited to Pitzer accounts and required athentication through Microsoft Entra ID using --@pitzer.edu single sign-on credentials.</p>
+	
+	<p>Although very unlikely, due to the nature of the authentication being only limited to those with an --@pitzer.edu account, it should be noted that Pitzer faculty and staff could have accessed and responded to the survey, fraudulently pretending to be a student.</p>
+
+<h3>survey marketing</h3>
+	<p>The survey was primarily marketed to students through fliers, the student talk listserv (student-talk@pitzer.edu), and word of mouth. Additionally, a volunteer marketing agent was used to solicit responses at McConnell dining hall during one meal period.</p>
+<p>A summary of the survey and responses can be found <a href="https://forms.cloud.microsoft/Pages/AnalysisPage.aspx?AnalyzerToken=Vx7KQhlkAv3hJLBfL19gA0B6sESyzGqF&id=Ni4najJrvEmJFZAA94g3ski2mnFRGJRGsP3HS5Hxbs5UQ1JNS09EMDJSM1U1WUJFSlQwRVQ0VjVCTS4u">here</a> and the raw dataset can be accessed <a href="https://pitzer-my.sharepoint.com/:x:/g/personal/amatsuok_pitzer_edu/IQC-w1oOnUT8ToG5FFuKJzCbAcLnhwBLG5T1dvKWlK0MQwI">here</a>.</p>
+
+<h3>Survey Quick Stats</h3>
+	<div class="stat-row">
+  <div class="stat-card">
+    <div class="stat-num" style="color:#054F63">131</div>
+	  <div class="stat-lbl">Students responded</div>
+	  </div>
+<div class="stat-card">
+    <div class="stat-num" style="color:#67963a">11%</div>
+	  <div class="stat-lbl">of student-body surveyed</div>
+	  </div>
+		
+<div class="stat-card">
+    <div class="stat-num" style="color:#e6b711">27</div>
+	  <div class="stat-lbl">Days of data collection</div>
+	  </div>
+<div class="stat-card">
+    <div class="stat-num" style="color:#cf4b27">~36</div>
+	  <div class="stat-lbl">minutes spent completing each submission*</div>
+	  </div>
+</div>
+
+  <footer class="page-footer">
+    <span>*mean of response time based on time elapsed of all submissions</span>
+    <span>&nbsp;</span>
+    <span>Page 2</span>
+  </footer>
+
+
+  </div><!-- end page 2 -->
+	
+	<!-- start page 3 -->
+	
+	<div class="page">
+<h2>Data Analysis</h2>
+	  <hr>	
+	<h3>Survey Demographics</h3>
+		<p class="eyebrow">Understanding biases in the data</p>
+	<div class="demo-page">
+
+  <!-- Two donut charts -->
+  <div class="donuts-row">
+
+    <!-- Donut 1: Class Year -->
+    <div class="donut-card">
+      <h4>Survey respondents by class year</h4>
+      <div class="donut-wrap">
+        <canvas id="donutYear"></canvas>
+      </div>
+      <div class="chart-legend">
+        <span><span class="sw" style="background:#3B8BD4"></span>2026 — 27%</span>
+        <span><span class="sw" style="background:#1D9E75"></span>2027 — 15%</span>
+        <span><span class="sw" style="background:#E8A020"></span>2028 — 34%</span>
+        <span><span class="sw" style="background:#C4563A"></span>2029 — 24%</span>
+      </div>
+    </div>
+
+    <!-- Donut 2: Where people live -->
+    <div class="donut-card">
+      <h4>Survey respondents by residence</h4>
+      <div class="donut-wrap">
+        <canvas id="donutRes"></canvas>
+      </div>
+      <div class="chart-legend">
+        <span><span class="sw" style="background:#3B8BD4"></span>Mead — 23%</span>
+        <span><span class="sw" style="background:#1D9E75"></span>East Hall — 15%</span>
+        <span><span class="sw" style="background:#E8A020"></span>West Hall — 11%</span>
+        <span><span class="sw" style="background:#C4563A"></span>N. Sanborn — 9%</span>
+        <span><span class="sw" style="background:#7B5EA7"></span>Atherton — 8%</span>
+        <span><span class="sw" style="background:#888780"></span>Off-campus — 8%</span>
+        <span><span class="sw" style="background:#5DCAA5"></span>Skandera — 8%</span>
+        <span><span class="sw" style="background:#E8C96A"></span>E. Sanborn — 7%</span>
+        <span><span class="sw" style="background:#D4A0C0"></span>CCA — 7%</span>
+        <span><span class="sw" style="background:#A0785A"></span>Pitzer Hall — 5%</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Stacked bar: Class year by residence -->
+  <div class="stacked-card">
+    <h4>Residence hall by class year</h4>
+    <div class="stacked-wrap">
+      <canvas id="stackedBar"></canvas>
+    </div>
+    <div class="chart-legend">
+      <span><span class="sw" style="background:#3B8BD4"></span>2026</span>
+      <span><span class="sw" style="background:#1D9E75"></span>2027</span>
+      <span><span class="sw" style="background:#E8A020"></span>2028</span>
+      <span><span class="sw" style="background:#C4563A"></span>2029</span>
+    </div>
+  </div>
+
+<p class="caption">Importantly, the Class of 2028 had 10% higher participation in the survey making the population a clear majority in the results. This is evidenced by a combined 24% of students lived in the WES community as a result of the Sophomore Year Experience. While this circumstance does not invalidate the results, this must be considered when evaluating the data as <strong>10% more participation</strong> from one class population is significant enough to impact the results of the survey.</p>
+</div>
+	 <footer class="page-footer">
+    <span></span>
+    <span>&nbsp;</span>
+    <span>Page 3</span>
+  </footer>
+	</div>
+<!-- end page 3-->
+	
+  <div class="page">
+
+    <!-- Page 4 content here -->
+    
+	<h3>Support for Pitzer Archives Exhibit in Study Rooms</h3>
+	  <p class="eyebrow">Aesthetics and ambiance</p>
+	  <p class="caption">Q: "I would like study rooms more if there were Pitzer Archives installations that showed cool facts about Pitzer's history"</p>
+	  <div class="stat-row">
+  <div class="stat-card">
+    <div class="stat-num" style="color:#1D9E75">73</div>
+    <div class="stat-lbl">Students agree or strongly agree</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" style="color:#1D9E75">56%</div>
+    <div class="stat-lbl">Favorable response rate</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" style="color:#888882">38</div>
+    <div class="stat-lbl">Neutral — open to it</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" style="color:#D85A30">20</div>
+    <div class="stat-lbl">Disagree or strongly disagree</div>
+  </div>
+</div>
+
+<div class="chart-card">
+  <div class="legend">
+    <span><span class="swatch" style="background:#1D9E75"></span>Supportive</span>
+    <span><span class="swatch" style="background:#888780"></span>Neutral</span>
+    <span><span class="swatch" style="background:#D85A30"></span>Not supportive</span>
+  </div>
+  <div class="chart-wrap">
+    <canvas id="archivesChart"></canvas>
+  </div>
+  <p class="caption" style="margin-top:1rem;"><strong>Fig 1.</strong> Student sentiment regarding Pitzer Archives installations in study rooms</p>
+</div>
+
+
+    <p><strong>Takeaway:</strong> 56% of students actively support the Archives exhibit and a combined 85% of students actively support or are neutral and open to the Archives exhibit. Pitzer Archives already has framed photographs presenting a <strong>low-cost</strong> way to enhance currently blank walls in study rooms. This would also enhance institutional memory and create a culture where Pitzer's roots are celebrated.</p>
+
+ <footer class="page-footer">
+    <span></span>
+    <span>&nbsp;</span>
+    <span>Page 4</span>
+  </footer>
+  </div><!-- end page 3 -->
+	
+  <div class="page">
+    <h3>Where students live and where they study matters</h3>
+	  <p class="eyebrow">Campus Study Room Usage</p>
+	    <p class="caption">Q: "Where do you live?", "Where do you use study rooms?"</p>
+	<div class="heatmap-wrapper">
+  <table class="heatmap-table">
+  <thead>
+    <tr>
+      <th class="row-header">Where students live</th>
+      <th>n</th>
+      <th>Mead Library</th>
+      <th>Skandera Hall</th>
+      <th>West Halls</th>
+      <th>East Hall</th>
+      <th>Pitzer Hall</th>
+      <th>Atherton Hall</th>
+      <th>East Sanborn</th>
+      <th>North Sanborn</th>
+    </tr>
+  </thead>
+  <tbody id="heatmap-tbody"></tbody>
+</table>
+
+<div class="heatmap-legend">
+  <span>0%</span>
+  <div class="heatmap-legend-grad"></div>
+  <span>100%</span>
+  <span style="margin-left:6px">= % of residents who use that residence hall's study room</span>
+</div>
+		<p class="caption" style="margin-top:1rem;"><strong>Fig 2.</strong> Where students live vs where students study on-campus. y-axis represents where students live, x-axis represents where students study.</p>
+<script>
+const heatmapData = [
+  { res: 'Mead Hall',          n: 30, vals: [83,37,27,30,10, 7,13, 3] },
+  { res: 'East Hall',          n: 19, vals: [79,37,42,95, 5, 5, 5, 0] },
+  { res: 'West Hall',          n: 15, vals: [60,60,93,53,20,27, 7, 0] },
+  { res: 'North Sanborn Hall', n: 12, vals: [50,33,17, 0,67,25, 0,33] },
+  { res: 'East Sanborn Hall',  n:  9, vals: [33,33,33,11,78,44,56,11] },
+  { res: 'Atherton Hall',      n: 11, vals: [36,82,36,18,36,91, 9, 9] },
+  { res: 'Off-campus',         n: 10, vals: [80,60,30,30,10, 0, 0, 0] },
+  { res: 'Skandera Hall',      n: 10, vals: [20,90,50,30, 0,10, 0, 0] },
+  { res: 'CCA',                n:  9, vals: [67,33,22,44,22,22,22, 0] },
+  { res: 'Pitzer Hall',        n:  6, vals: [50,67,33,17,83, 0, 0, 0] },
+];
+
+function getHeatColor(pct) {
+  if (pct === 0) return { bg: 'transparent', text: '#888882' };
+  const stops = [
+    [10,  [225,245,238]],
+    [30,  [159,225,203]],
+    [50,  [93, 202,165]],
+    [70,  [29, 158,117]],
+    [90,  [15, 110, 86]],
+    [100, [ 8,  80, 65]],
+  ];
+  let lo = stops[0], hi = stops[stops.length-1];
+  for (let i = 0; i < stops.length - 1; i++) {
+    if (pct >= stops[i][0] && pct <= stops[i+1][0]) { lo = stops[i]; hi = stops[i+1]; break; }
+  }
+  const t = (pct - lo[0]) / (hi[0] - lo[0]);
+  const r = Math.round(lo[1][0] + t*(hi[1][0]-lo[1][0]));
+  const g = Math.round(lo[1][1] + t*(hi[1][1]-lo[1][1]));
+  const b = Math.round(lo[1][2] + t*(hi[1][2]-lo[1][2]));
+  const brightness = (r*299 + g*587 + b*114) / 1000;
+  const text = brightness > 140 ? '#085041' : '#E1F5EE';
+  return { bg: `rgb(${r},${g},${b})`, text };
+}
+
+const tbody = document.getElementById('heatmap-tbody');
+heatmapData.forEach(row => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td class="label">${row.res}</td><td class="n">${row.n}</td>`;
+  row.vals.forEach(v => {
+    const {bg, text} = getHeatColor(v);
+    tr.innerHTML += `<td style="background:${bg};color:${text}">${v === 0 ? '—' : v+'%'}</td>`;
+  });
+  tbody.appendChild(tr);
+});
+</script>
+	</div>
+<p><strong>Takeaway:</strong> Data suggests that students like to study in the residence hall that they live in, if available. For example, 95% of residents in East Hall, where there is a high concentration of study rooms, also stated they used study rooms in East Hall. Conversely, 67% of North Sanborn, where there is a low concentration of study rooms, also said they use Pitzer Hall study rooms. This potential student desire for study rooms in the same residence hall they live in is a potential thread to be followed when conducting new surveys about residential study areas.</p>
+	  
+<h3>Study room location preference</h3>
+	  <p class="eyebrow">Campus Study Room Usage</p>
+	  <div class="stat-row" style="margin-bottom: .2in">
+  <div class="stat-card">
+    <div class="stat-num" style="color:#64B0C4">25%</div>
+    <div class="stat-lbl">of students study in Mead Library</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" style="color:#e6b711">20%</div>
+    <div class="stat-lbl">of students study in Skandera Hall</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" style="color:#cf4b27">16%</div>
+    <div class="stat-lbl">of students study in West Hall</div>
+		  </div>
+    <div class="stat-card">
+    <div class="stat-num" style="color:#975a11">15%</div>
+    <div class="stat-lbl">of students study in East Hall</div>
+		
+  </div>  
+	  </div>	
+	  <p class="caption">It should be noted that the majority of respondents (34%) were part of the class of 2028 meaning they live in WES halls, for this reason usage location may be skewed due to class-based residential experiences.</p>
+    <!-- Page 4 content here -->
+	  
+	<footer class="page-footer">
+    <span></span>
+    <span>&nbsp;</span>
+    <span>Page 5</span>
+  </footer>  
+	</div>	 
+	
+	
+<div class="page">
+<h3>Where Students Use Study Rooms</h3>	
+<p class="eyebrow">Campus Study Room Usage</p>
+<p class="caption">Q: "Where do you use study rooms?"</p>
+<div class="map-wrap" id="mapWrap">
+  <img src="pitzer-map.png" alt="Pitzer College Campus Map">
+
+  <svg viewBox="0 0 592 751" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="shadow">
+        <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.18"/>
+      </filter>
+    </defs>
+
+    <!-- Mead Library — 81 students -->
+    <g class="map-marker" data-name="Mead Library" data-count="81" data-pct="62%">
+      <circle cx="-10" cy="380" r="28" fill="#1D9E75" opacity="0.82" filter="url(#shadow)"/>
+      <text x="-10" y="376" text-anchor="middle" font-family="DM Sans" font-size="11" font-weight="500" fill="#fff">Mead</text>
+      <text x="-10" y="389" text-anchor="middle" font-family="DM Sans" font-size="11" font-weight="500" fill="#fff">Library</text>
+      <text x="-10" y="402" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#E1F5EE">81</text>
+    </g>
+
+    <!-- Skandera Hall — 65 students -->
+    <g class="map-marker" data-name="Skandera Hall" data-count="65" data-pct="50%">
+      <circle cx="380" cy="285" r="25" fill="#1D9E75" opacity="0.82" filter="url(#shadow)"/>
+      <text x="380" y="281" text-anchor="middle" font-family="DM Sans" font-size="10" font-weight="500" fill="#fff">Skandera</text>
+      <text x="380" y="293" text-anchor="middle" font-family="DM Sans" font-size="10" font-weight="500" fill="#fff">Hall</text>
+      <text x="380" y="305" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#E1F5EE">65</text>
+    </g>
+
+    <!-- West Hall — 51 students -->
+    <g class="map-marker" data-name="West Halls" data-count="51" data-pct="39%">
+      <circle cx="400" cy="100" r="22" fill="#1D9E75" opacity="0.82" filter="url(#shadow)"/>
+      <text x="400" y="91" text-anchor="middle" font-family="DM Sans" font-size="10" font-weight="500" fill="#fff">West</text>
+      <text x="400" y="103" text-anchor="middle" font-family="DM Sans" font-size="10" font-weight="500" fill="#fff">Hall</text>
+      <text x="400" y="115" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#E1F5EE">51</text>
+    </g>
+
+    <!-- East Hall — 49 students -->
+    <g class="map-marker" data-name="East Hall" data-count="49" data-pct="37%">
+      <circle cx="452" cy="215" r="21" fill="#1D9E75" opacity="0.82" filter="url(#shadow)"/>
+      <text x="452" y="206" text-anchor="middle" font-family="DM Sans" font-size="10" font-weight="500" fill="#fff">East</text>
+      <text x="452" y="218" text-anchor="middle" font-family="DM Sans" font-size="10" font-weight="500" fill="#fff">Hall</text>
+      <text x="452" y="230" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#E1F5EE">49</text>
+    </g>
+
+    <!-- Pitzer Hall — 34 students -->
+    <g class="map-marker" data-name="Pitzer Hall" data-count="34" data-pct="26%">
+      <circle cx="300" cy="620" r="18" fill="#1D9E75" opacity="0.82" filter="url(#shadow)"/>
+      <text x="300" y="616" text-anchor="middle" font-family="DM Sans" font-size="10" font-weight="500" fill="#fff">Pitzer</text>
+      <text x="300" y="628" text-anchor="middle" font-family="DM Sans" font-size="10" font-weight="500" fill="#fff">Hall</text>
+      <text x="300" y="639" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#E1F5EE">34</text>
+    </g>
+
+    <!-- Atherton Hall — 27 students -->
+    <g class="map-marker" data-name="Atherton Hall" data-count="27" data-pct="21%">
+      <circle cx="318" cy="336" r="16" fill="#1D9E75" opacity="0.82" filter="url(#shadow)"/>
+      <text x="318" y="332" text-anchor="middle" font-family="DM Sans" font-size="9" font-weight="500" fill="#fff">Atherton</text>
+      <text x="318" y="343" text-anchor="middle" font-family="DM Sans" font-size="9" font-weight="500" fill="#fff">Hall</text>
+      <text x="318" y="353" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#E1F5EE">27</text>
+    </g>
+
+    <!-- East Sanborn — 14 students -->
+    <g class="map-marker" data-name="East Sanborn" data-count="14" data-pct="11%">
+      <circle cx="508" cy="412" r="12" fill="#1D9E75" opacity="0.82" filter="url(#shadow)"/>
+      <text x="508" y="409" text-anchor="middle" font-family="DM Sans" font-size="8" font-weight="500" fill="#fff">E. San</text>
+      <text x="508" y="419" text-anchor="middle" font-family="DM Sans" font-size="8" fill="#E1F5EE">14</text>
+    </g>
+
+    <!-- North Sanborn — 7 students -->
+    <g class="map-marker" data-name="North Sanborn" data-count="7" data-pct="5%">
+      <circle cx="355" cy="402" r="9" fill="#1D9E75" opacity="0.82" filter="url(#shadow)"/>
+      <text x="355" y="399" text-anchor="middle" font-family="DM Sans" font-size="7.5" font-weight="500" fill="#fff">N.San</text>
+      <text x="355" y="409" text-anchor="middle" font-family="DM Sans" font-size="7.5" fill="#E1F5EE">7</text>
+    </g>
+
+</svg>
+
+  <div class="map-tooltip" id="mapTooltip">
+    <strong id="tip-name"></strong>
+    <span id="tip-count"></span>
+  </div>
+</div>
+
+<div class="map-legend">
+  <svg width="90" height="28" viewBox="0 0 90 28">
+    <circle cx="8"  cy="14" r="6"  fill="#1D9E75" opacity="0.7"/>
+    <circle cx="28" cy="14" r="10" fill="#1D9E75" opacity="0.7"/>
+    <circle cx="54" cy="14" r="14" fill="#1D9E75" opacity="0.7"/>
+  </svg>
+  <span>Bubble size = number of students using that location</span>
+</div>
+	<span>&nbsp;</span>
+<p class="caption">Students could select multiple locations; total selections (328) exceed survey respondents (131).</p>
+	  
+	<footer class="page-footer">
+    <span></span>
+    <span>&nbsp;</span>
+    <span>Page 6</span>
+  </footer> 	  
+	  </div>
+<div class="page">
+  <h3>How students use study spaces</h3>
+<p class="eyebrow">Study Room behaviors</p>
+<p class="caption">Q: "Evaluate the following scenarios and answer based on the frequency you engage in these behaviors" </p>
+
+<!-- Chart 1: Study behavior frequency -->
+<div class="diverging-card">
+  <div class="div-legend">
+    <span><span class="sw" style="background:#C4563A"></span>Always</span>
+    <span><span class="sw" style="background:#E8A020"></span>Often</span>
+    <span><span class="sw" style="background:#c8c6be"></span>Sometimes</span>
+    <span><span class="sw" style="background:#7B9FD4"></span>Rarely</span>
+    <span><span class="sw" style="background:#3B5EA6"></span>Never</span>
+  </div>
+  <div class="diverging-wrap" style="height:130px">
+    <canvas id="freqChart"></canvas>
+  </div>
+</div>
+<p class="caption" style="margin-top:.04in; margin-bottom:.01in">Q: "Most often, I use study rooms to..."</p>
+
+<!-- Chart 2: Use case purposes -->
+<div class="diverging-card">
+  <div class="div-legend">
+    <span><span class="sw" style="background:#C4563A"></span>Strongly agree</span>
+    <span><span class="sw" style="background:#E8A020"></span>Agree</span>
+    <span><span class="sw" style="background:#c8c6be"></span>Neutral</span>
+    <span><span class="sw" style="background:#7B9FD4"></span>Disagree</span>
+    <span><span class="sw" style="background:#3B5EA6"></span>Strongly disagree</span>
+  </div>
+  <div class="diverging-wrap" style="height:160px">
+    <canvas id="usageChart"></canvas>
+  </div>
+</div>
+	
+	<footer class="page-footer">
+	<span></span>
+		<span></span>
+		<span>Page 7</span>
+	</footer>
+	
+</div>
+	
+	<!--Page 8-->
+	<div class="page">
+	<h3>Study room impacts on student experience</h3>
+		<p class="eyebrow">student psychology and academic success</p>
+<div class="wc-section">
+  <div class="wc-cloud-label">Aesthetic — "in one word, how would you describe the study rooms from an aesthetic point of view?"</div>
+  <div class="wc-box" id="cloudA"></div>
+</div>
+
+<div class="wc-section">
+  <div class="wc-cloud-label">Feeling — "in one word, how would you describe the way the study rooms make you feel?"</div>
+  <div class="wc-box" id="cloudB"></div>
+	</div>
+	<footer class="page-footer">
+	<span></span>
+		<span></span>
+		<span>Page 8</span>
+	</footer>
+	</div>
+    <!-- ════════════════════════════════
+         END OF EDITABLE CONTENT
+         ════════════════════════════════ -->
+<!-- scripts for donut charts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>	
+	
+<!-- archives visual -->
+	<script>
+new Chart(document.getElementById('archivesChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Strongly agree', 'Agree', 'Neutral', 'Disagree', 'Strongly disagree'],
+    datasets: [{
+      data: [34, 39, 38, 11, 9],
+      backgroundColor: ['#1D9E75cc','#5DCAA5cc','#88878099','#F0997Bcc','#D85A30cc'],
+      borderColor: ['#0F6E56','#1D9E75','#5F5E5A','#D85A30','#993C1D'],
+      borderWidth: 0.5,
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.parsed.y} students (${Math.round(ctx.parsed.y / 131 * 100)}%)`
+        }
+      }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11, family: 'DM Sans' } } },
+      y: {
+        beginAtZero: true, max: 50,
+        title: { display: true, text: 'Number of students', font: { size: 11, family: 'DM Sans' } },
+        grid: { color: 'rgba(130,130,130,0.1)' },
+        ticks: { stepSize: 10 }
+      }
+    }
+  }
+});
+</script>
+	
+<script>
+const tipFont = { family: 'DM Sans', size: 11 };
+
+/* ── Donut: Class Year ── */
+new Chart(document.getElementById('donutYear'), {
+  type: 'doughnut',
+  data: {
+    labels: ['2026', '2027', '2028', '2029'],
+    datasets: [{
+      data: [35, 20, 45, 31],
+      backgroundColor: ['#3B8BD4','#1D9E75','#E8A020','#C4563A'],
+      borderWidth: 1.5,
+      borderColor: '#fff',
+      hoverOffset: 6,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '62%',
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.label}: ${ctx.parsed} students (${Math.round(ctx.parsed/131*100)}%)`
+        },
+        bodyFont: tipFont,
+      }
+    }
+  }
+});
+
+/* ── Donut: Residence ── */
+new Chart(document.getElementById('donutRes'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Mead Hall','East Hall','West Hall','N. Sanborn','Atherton','Off-campus','Skandera','E. Sanborn','CCA','Pitzer Hall'],
+    datasets: [{
+      data: [30, 19, 15, 12, 11, 10, 10, 9, 9, 6],
+      backgroundColor: ['#3B8BD4','#1D9E75','#E8A020','#C4563A','#7B5EA7','#888780','#5DCAA5','#E8C96A','#D4A0C0','#A0785A'],
+      borderWidth: 1.5,
+      borderColor: '#fff',
+      hoverOffset: 6,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '62%',
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.label}: ${ctx.parsed} students (${Math.round(ctx.parsed/131*100)}%)`
+        },
+        bodyFont: tipFont,
+      }
+    }
+  }
+});
+
+/* ── Stacked Bar: Residence x Class Year ── */
+new Chart(document.getElementById('stackedBar'), {
+  type: 'bar',
+  data: {
+    labels: ['Mead Hall','East Hall','West Hall','N. Sanborn','Atherton','Off-campus','Skandera','E. Sanborn','CCA','Pitzer Hall'],
+    datasets: [
+      {
+        label: '2026',
+        data: [17, 1, 1, 0, 2, 7, 1, 0, 5, 1],
+        backgroundColor: '#3B8BD4',
+        borderRadius: 2,
+      },
+      {
+        label: '2027',
+        data: [10, 0, 0, 1, 2, 2, 1, 0, 3, 1],
+        backgroundColor: '#1D9E75',
+        borderRadius: 2,
+      },
+      {
+        label: '2028',
+        data: [3, 18, 14, 0, 1, 1, 8, 0, 0, 0],
+        backgroundColor: '#E8A020',
+        borderRadius: 2,
+      },
+      {
+        label: '2029',
+        data: [0, 0, 0, 11, 6, 0, 0, 9, 1, 4],
+        backgroundColor: '#C4563A',
+        borderRadius: 2,
+      },
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` Class of ${ctx.dataset.label}: ${ctx.parsed.y} students`
+        },
+        bodyFont: tipFont,
+      }
+    },
+    scales: {
+      x: {
+        stacked: true,
+        grid: { display: false },
+        ticks: { font: { size: 8, family: 'DM Sans' }, maxRotation: 35 }
+      },
+      y: {
+        stacked: true,
+        grid: { color: 'rgba(130,130,130,0.1)' },
+        ticks: { font: { size: 9, family: 'DM Sans' }, stepSize: 5 },
+        title: { display: true, text: 'Students', font: { size: 9, family: 'DM Sans' } }
+      }
+    }
+  }
+});
+</script>
+	
+	<script>
+const mapMarkers = document.querySelectorAll('.map-marker');
+const mapTooltip = document.getElementById('mapTooltip');
+const tipName    = document.getElementById('tip-name');
+const tipCount   = document.getElementById('tip-count');
+const mapWrap    = document.getElementById('mapWrap');
+
+mapMarkers.forEach(m => {
+  m.style.cursor = 'pointer';
+  m.addEventListener('mouseenter', () => {
+    tipName.textContent  = m.dataset.name;
+    tipCount.textContent = `${m.dataset.count} students (${m.dataset.pct} of respondents)`;
+    mapTooltip.style.opacity = '1';
+  });
+  m.addEventListener('mousemove', (e) => {
+    const rect = mapWrap.getBoundingClientRect();
+    let x = e.clientX - rect.left + 12;
+    let y = e.clientY - rect.top  - 40;
+    if (x + 200 > rect.width) x = e.clientX - rect.left - 180;
+    mapTooltip.style.left = x + 'px';
+    mapTooltip.style.top  = y + 'px';
+  });
+  m.addEventListener('mouseleave', () => {
+    mapTooltip.style.opacity = '0';
+  });
+});
+</script>
+	
+<!-- script for likert scale graphs-->
+	<script>
+/* ── helpers ── */
+function pct(n){ return Math.round(n/131*100); }
+
+const divOpts = (labels, total) => ({
+  responsive: true,
+  maintainAspectRatio: false,
+  indexAxis: 'y',
+  plugins: {
+    legend: { display: false },
+    tooltip: {
+      callbacks: {
+        label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.x} students (${pct(ctx.parsed.x)}%)`
+      },
+      bodyFont: { family: 'DM Sans', size: 11 }
+    }
+  },
+  scales: {
+    x: {
+      stacked: true,
+      min: 0, max: 100,
+      ticks: {
+        callback: v => v + '%',
+        font: { size: 8, family: 'DM Sans' },
+        stepSize: 25
+      },
+      grid: { color: 'rgba(130,130,130,0.1)' }
+    },
+    y: {
+      stacked: true,
+      grid: { display: false },
+      ticks: { font: { size: 8, family: 'DM Sans' } }
+    }
+  }
+});
+
+function makePct(arr){
+  return arr.map(v => Math.round(v/131*100));
+}
+
+/* ── Chart 1: Frequency ── */
+new Chart(document.getElementById('freqChart'), {
+  type: 'bar',
+  data: {
+    labels: ['I study in my room', 'I study in study rooms', 'Non-academic use'],
+    datasets: [
+      { label: 'Always',    data: makePct([10, 8,  4]),  backgroundColor: '#C4563A', borderRadius: 2 },
+      { label: 'Often',     data: makePct([49, 39, 12]), backgroundColor: '#E8A020', borderRadius: 2 },
+      { label: 'Sometimes', data: makePct([29, 48, 42]), backgroundColor: '#c8c6be', borderRadius: 2 },
+      { label: 'Rarely',    data: makePct([34, 32, 39]), backgroundColor: '#7B9FD4', borderRadius: 2 },
+      { label: 'Never',     data: makePct([9,  4,  34]), backgroundColor: '#3B5EA6', borderRadius: 2 },
+    ]
+  },
+  options: divOpts(['I study in my room','I study in study rooms','Non-academic use'], 131)
+});
+
+/* ── Chart 2: Use cases ── */
+new Chart(document.getElementById('usageChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Hang out with friends', 'Independent academic work', 'Collaborative academic work', 'Alone time from roommates'],
+    datasets: [
+      { label: 'Strongly agree',    data: makePct([3,  34, 30, 4]),  backgroundColor: '#C4563A', borderRadius: 2 },
+      { label: 'Agree',             data: makePct([28, 65, 64, 31]), backgroundColor: '#E8A020', borderRadius: 2 },
+      { label: 'Neutral',           data: makePct([17, 14, 21, 25]), backgroundColor: '#c8c6be', borderRadius: 2 },
+      { label: 'Disagree',          data: makePct([38, 12, 11, 34]), backgroundColor: '#7B9FD4', borderRadius: 2 },
+      { label: 'Strongly disagree', data: makePct([45, 6,  5,  37]), backgroundColor: '#3B5EA6', borderRadius: 2 },
+    ]
+  },
+  options: divOpts(['Hang out with friends','Independent academic work','Collaborative academic work','Alone time from roommates'], 131)
+});
+</script>
+	<!--Scripts for clouds-->
+<script>
+const wcAesthetic = [
+  {w:'bland',n:14},{w:'sterile',n:12},{w:'plain',n:10},{w:'boring',n:7},
+  {w:'bare',n:5},{w:'basic',n:4},{w:'fine',n:4},{w:'drab',n:4},
+  {w:'okay',n:3},{w:'functional',n:3},{w:'nice',n:2},{w:'harsh',n:2},
+  {w:'neutral',n:2},{w:'dull',n:2},{w:'ugly',n:2},{w:'cold',n:1},
+  {w:'bleak',n:1},{w:'stark',n:1},{w:'clean',n:1},{w:'stuffy',n:1},
+  {w:'sparse',n:1},{w:'barren',n:1},{w:'dreary',n:1},{w:'empty',n:1},
+  {w:'smelly',n:1},{w:'depressing',n:1},{w:'cozy',n:1},{w:'corporate',n:1},
+  {w:'claustrophobic',n:1},{w:'uninspiring',n:1},{w:'minimalist',n:1},
+  {w:'surgical',n:1},{w:'prison',n:1},{w:'airport',n:1},{w:'void',n:1},
+];
+
+const wcFeeling = [
+  {w:'sad',n:10},{w:'focused',n:9},{w:'neutral',n:7},{w:'fine',n:6},
+  {w:'bored',n:4},{w:'gross',n:4},{w:'uncomfortable',n:4},{w:'calm',n:3},
+  {w:'musty',n:3},{w:'stressed',n:3},{w:'uninspired',n:2},{w:'dread',n:2},
+  {w:'enclosed',n:2},{w:'depressed',n:2},{w:'bad',n:2},{w:'productive',n:3},
+  {w:'tired',n:2},{w:'icky',n:2},{w:'corporate',n:2},{w:'studious',n:2},
+  {w:'trapped',n:1},{w:'stifled',n:1},{w:'tense',n:1},{w:'glum',n:1},
+  {w:'somber',n:1},{w:'smelly',n:1},{w:'caged',n:1},{w:'grimey',n:1},
+  {w:'stuffy',n:1},{w:'uneasy',n:1},{w:'monotonous',n:1},{w:'moldy',n:1},
+  {w:'unmotivated',n:1},{w:'secluded',n:1},{w:'quiet',n:1},{w:'awake',n:1},
+];
+
+const wcPosA = new Set(['nice','functional','fine','okay','clean','minimalist','cozy']);
+const wcPosB = new Set(['focused','calm','productive','studious','quiet','awake','secluded','fine']);
+
+/* ── Custom tooltip ── */
+const wcTip = document.createElement('div');
+wcTip.style.cssText = `
+  position: fixed;
+  background: #fff;
+  border: 0.5px solid #dddbd5;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  color: #1a1a18;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  z-index: 9999;
+  white-space: nowrap;
+`;
+document.body.appendChild(wcTip);
+
+function wcFontSize(n, max) {
+  return Math.round(11 + ((n - 1) / (max - 1)) * 42);
+}
+function wcFontWeight(n) {
+  return n >= 8 ? '700' : n >= 5 ? '600' : n >= 3 ? '500' : '400';
+}
+function wcShuffle(words) {
+  const max = words[0].n;
+  return [...words].sort((a, b) => {
+    const ra = Math.random() * 0.4 + (a.n / max) * 0.6;
+    const rb = Math.random() * 0.4 + (b.n / max) * 0.6;
+    return rb - ra;
+  });
+}
+
+function wcRender(containerId, words, negColor, posColor, positiveSet) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const max = words[0].n;
+  wcShuffle(words).forEach(({w, n}) => {
+    const span = document.createElement('span');
+    const opacity = n === 1 ? 0.55 : n <= 2 ? 0.72 : 1;
+    span.textContent = w;
+    span.style.cssText = `
+      font-family: 'DM Sans', sans-serif;
+      font-size: ${wcFontSize(n, max)}px;
+      font-weight: ${wcFontWeight(n)};
+      color: ${positiveSet.has(w) ? posColor : negColor};
+      opacity: ${opacity};
+      cursor: default;
+      user-select: none;
+      transition: opacity 0.15s;
+    `;
+    span.addEventListener('mouseenter', (e) => {
+      span.style.opacity = '1';
+      wcTip.textContent = `${n} student${n !== 1 ? 's' : ''} said "${w}"`;
+      wcTip.style.opacity = '1';
+    });
+    span.addEventListener('mousemove', (e) => {
+      wcTip.style.left = (e.clientX + 12) + 'px';
+      wcTip.style.top  = (e.clientY - 28) + 'px';
+    });
+    span.addEventListener('mouseleave', () => {
+      span.style.opacity = String(opacity);
+      wcTip.style.opacity = '0';
+    });
+    container.appendChild(span);
+  });
+}
+
+wcRender('cloudA', wcAesthetic, '#cf4b27', '#64B0C4', wcPosA);
+wcRender('cloudB', wcFeeling,   '#64B0C4', '#67963a', wcPosB);
+</script>
+</body>
+</html>
