@@ -10,6 +10,47 @@
       font-size: 12pt;
       color: #1a1a18;
     }
+/*–– Nav bar ––*/
+.pill-nav {
+  position: fixed;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #1a1a18;
+  border-radius: 999px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+  gap: 2px;
+  width: 38px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  z-index: 1000;
+}
+.pn-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: rgba(255,255,255,0.55);
+  border: none;
+  background: none;
+  transition: background 0.12s, color 0.12s;
+}
+.pn-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+.pn-btn.active { background: rgba(255,255,255,0.15); color: #fff; }
+.pn-sep {
+  width: 16px;
+  height: 0.5px;
+  background: rgba(255,255,255,0.2);
+  margin: 4px 0;
+}
+@media print {
+  .pill-nav { display: none; }
+}
 
     /* The page itself — 8.5 x 11 inches */
     .page {

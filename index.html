@@ -8,7 +8,51 @@
   <link rel="stylesheet" href="main.css">
 </head>
 <body>
-	
+	<nav class="pill-nav" id="pillNav">
+
+  <!-- Single page -->
+  <button class="pn-btn active" id="btn1x" title="Single page" onclick="setView(1)">
+    <svg width="14" height="16" viewBox="0 0 14 16" fill="none">
+      <rect x="2" y="1" width="10" height="14" rx="1.5" fill="currentColor"/>
+    </svg>
+  </button>
+
+  <!-- Two page -->
+  <button class="pn-btn" id="btn2x" title="Two-page view" onclick="setView(2)">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <rect x="0.5" y="1" width="6.5" height="14" rx="1.5" fill="currentColor"/>
+      <rect x="9" y="1" width="6.5" height="14" rx="1.5" fill="currentColor"/>
+    </svg>
+  </button>
+
+  <div class="pn-sep"></div>
+
+  <!-- Previous page -->
+  <button class="pn-btn" title="Previous page" onclick="changePage(-1)">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+      <path d="M6 2L11 9H1L6 2Z" fill="currentColor"/>
+    </svg>
+  </button>
+
+  <!-- Next page -->
+  <button class="pn-btn" title="Next page" onclick="changePage(1)">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+      <path d="M6 10L1 3H11L6 10Z" fill="currentColor"/>
+    </svg>
+  </button>
+
+  <div class="pn-sep"></div>
+
+  <!-- Print -->
+  <button class="pn-btn" title="Print" onclick="window.print()">
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+      <rect x="2" y="5" width="9" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M4 5V2h5v3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      <rect x="4" y="8" width="5" height="1.5" rx="0.5" fill="currentColor"/>
+    </svg>
+  </button>
+
+</nav>
 	
 <div class="page" style="padding: 0;">
   <img src="cover_image.png" style="width: 100%; height: 11in; object-fit: cover;">
@@ -41,12 +85,12 @@
          ════════════════════════════════ -->
     <h2>Introduction</h2>
 
-    <p>In my four years at Pitzer I have been exposed to many study spaces across the 5Cs. I have heard complaints about Pitzer study rooms, but I wanted to discover how people really used study rooms and if there was a desire to improve. This data has been collected as part of my senior thesis project in Organizational Studies to discover what Pitzer students actually want in their study spaces in order to make them more productive and successful students. This report will shine light on the needs of students within on-campus study spaces and how .</p>
+    <p>In my four years at Pitzer I have been exposed to many study spaces across the 5Cs. I have heard complaints about Pitzer study rooms, but I wanted to discover how people really used study rooms and if there was a desire to improve. This data has been collected as part of my senior thesis project in Organizational Studies to discover what Pitzer students actually want in their study spaces in order to make them more productive and successful students. This report will shine light on the needs of students within on-campus study spaces and how.</p>
 	  <hr>
 
     <h3>What is organizational Studies ?</h3>
 
-    <p>Organizational studies put simply is the study of how humans organize themselves and the systems that they operate within. Specifically, Organizational Studies is an interdisciplinary field combining Political Studies, Sociology, Psychology and Economics to analyze how organizations operate, how they affect society, and what their lifecycle is like: how they are created, maintained, and modified. An organization could mean anything from a Fortune 500 company with a stratified hierarchy of positions, or it could mean your friend group — in this case the organization I am examining is Pitzer. Within our organizations that we participate in there are many different factors that impact the organizational dynamic — power imbalances, physical environment, interpersonal conflicts, individual identities, and much more.</p> 
+    <p>Organizational studies put simply is the study of how humans form and structure collectives and the systems that they operate within and interact with. Specifically, Organizational Studies is an interdisciplinary field combining Political Studies, Sociology, Psychology and Economics to analyze how organizations operate, how they affect society, and what their lifecycle is like: how they are created, maintained, and modified. An organization could mean anything from a Fortune 500 company with a stratified hierarchy of positions, or it could mean your friend group — in this case the organization I am examining is Pitzer. Within our organizations that we participate in there are many different factors that impact the organizational dynamic — power imbalances, physical environment, interpersonal conflicts, individual identities, and much more.</p> 
 	
 	<p> With the definition of organizational studies in mind, the focus of my thesis project of examining student study spaces, physical spaces are not only 
     important to how people create their emotional and intellectual realities, but directly correlates to where and how people organize. It is well understood 
@@ -73,7 +117,7 @@
 	<p>Although very unlikely, due to the nature of the authentication being only limited to those with an --@pitzer.edu account, it should be noted that Pitzer faculty and staff could have accessed and responded to the survey, fraudulently pretending to be a student.</p>
 
 <h3>survey marketing</h3>
-	<p>The survey was primarily marketed to students through fliers, the student talk listserv (student-talk@pitzer.edu), and word of mouth. Additionally, a volunteer marketing agent was used to solicit responses at McConnell dining hall during one meal period.</p>
+	<p>The survey was primarily marketed to students through fliers, the student talk listserv (student-talk@pitzer.edu), and word of mouth. Additionally, responses were solicited at McConnell dining hall during one meal period.</p>
 <p>A summary of the survey and responses can be found <a href="https://forms.cloud.microsoft/Pages/AnalysisPage.aspx?AnalyzerToken=Vx7KQhlkAv3hJLBfL19gA0B6sESyzGqF&id=Ni4najJrvEmJFZAA94g3ski2mnFRGJRGsP3HS5Hxbs5UQ1JNS09EMDJSM1U1WUJFSlQwRVQ0VjVCTS4u">here</a> and the raw dataset can be accessed <a href="https://pitzer-my.sharepoint.com/:x:/g/personal/amatsuok_pitzer_edu/IQC-w1oOnUT8ToG5FFuKJzCbAcLnhwBLG5T1dvKWlK0MQwI">here</a>.</p>
 
 <h3>Survey Quick Stats</h3>
@@ -343,7 +387,7 @@ heatmapData.forEach(row => {
 <h3>Where Students Use Study Rooms</h3>	
 <p class="eyebrow">Campus Study Room Usage</p>
 <p class="caption">Q: "Where do you use study rooms?"</p>
-<div class="map-wrap" id="mapWrap">
+<div class="map-wrap" id="mapWrap" style="float: left; width: 100%; margin-right: 1em;">
   <img src="pitzer-map.png" alt="Pitzer College Campus Map">
 
   <svg viewBox="0 0 592 751" xmlns="http://www.w3.org/2000/svg">
@@ -543,12 +587,49 @@ heatmapData.forEach(row => {
 
 
 </div>
+<script>
+let currentView = 1;
+const pages = document.querySelectorAll('.page');
+let currentPage = 0;
+
+function setView(mode) {
+  currentView = mode;
+  document.getElementById('btn1x').classList.toggle('active', mode === 1);
+  document.getElementById('btn2x').classList.toggle('active', mode === 2);
+
+  if (mode === 1) {
+    pages.forEach(p => {
+      p.style.display = 'flex';
+      p.style.marginLeft = 'auto';
+      p.style.marginRight = 'auto';
+      p.style.float = 'none';
+    });
+    document.body.style.display = 'block';
+  } else {
+    document.body.style.display = 'flex';
+    document.body.style.flexWrap = 'wrap';
+    document.body.style.justifyContent = 'center';
+    document.body.style.alignItems = 'flex-start';
+    document.body.style.gap = '0.25in';
+    pages.forEach(p => {
+      p.style.margin = '0.25in 0.1in';
+      p.style.float = 'none';
+    });
+  }
+}
+
+function changePage(dir) {
+  currentPage = Math.max(0, Math.min(pages.length - 1, currentPage + dir));
+  pages[currentPage].scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+</script>
+</body>
 
     <!-- ════════════════════════════════
          END OF EDITABLE CONTENT
          ════════════════════════════════ -->
 <!-- scripts for donut charts -->
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
   document.fonts.ready.then(() => {
