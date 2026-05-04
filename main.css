@@ -52,6 +52,28 @@
   .pill-nav { display: none; }
 }
 
+/* Responsive nav for smaller screens */
+@media (max-width: 1024px) {
+  .pill-nav {
+    position: fixed;
+    left: auto;
+    top: auto;
+    bottom: 20px;
+    right: 20px;
+    transform: none;
+    flex-direction: row;
+    width: auto;
+    height: 38px;
+    padding: 0 10px;
+    gap: 4px;
+  }
+  .pn-sep {
+    width: 0.5px;
+    height: 16px;
+    margin: 0 4px;
+  }
+}
+
     /* The page itself — 8.5 x 11 inches */
     .page {
       width: 8.5in;
