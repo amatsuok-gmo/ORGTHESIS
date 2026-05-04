@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="main.css">
 </head>
-<body>
+<body class="single-view">
 	<nav class="pill-nav" id="pillNav">
 
   <!-- Single page -->
@@ -598,21 +598,19 @@ function setView(mode) {
   document.getElementById('btn2x').classList.toggle('active', mode === 2);
 
   if (mode === 1) {
+    document.body.classList.remove('two-page-view');
+    document.body.classList.add('single-view');
     pages.forEach(p => {
       p.style.display = 'flex';
       p.style.marginLeft = 'auto';
       p.style.marginRight = 'auto';
       p.style.float = 'none';
     });
-    document.body.style.display = 'block';
   } else {
-    document.body.style.display = 'flex';
-    document.body.style.flexWrap = 'wrap';
-    document.body.style.justifyContent = 'center';
-    document.body.style.alignItems = 'flex-start';
-    document.body.style.gap = '0.25in';
+    document.body.classList.remove('single-view');
+    document.body.classList.add('two-page-view');
     pages.forEach(p => {
-      p.style.margin = '0.25in 0.1in';
+      p.style.margin = '';
       p.style.float = 'none';
     });
   }
