@@ -1,0 +1,464 @@
+  * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #d0d0d0;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12pt;
+      color: #1a1a18;
+    }
+
+    /* The page itself — 8.5 x 11 inches */
+    .page {
+      width: 8.5in;
+      height: 11in;
+      margin: 0.5in auto;
+      background: #ffffff;
+      padding: 1in;           /* 1-inch margins on all sides — adjust as needed */
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* ── Typography ── */
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28pt;
+      font-weight: 400;
+      line-height: 1.2;
+      color: #1a1a18;
+      margin-bottom: 0.15in;
+    }
+
+    h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20pt;
+      font-weight: 400;
+      line-height: 1.25;
+      color: #1a1a18;
+      margin-bottom: 0.1in;
+    }
+
+    h3 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13pt;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #f7941d;          /* teal accent — matches chart colors */
+      margin-bottom: 0.08in;
+    }
+
+h4 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9pt;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #1a1a18;
+  margin-bottom: 6px;
+}
+
+    p {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11pt;
+      font-weight: 400;
+      line-height: 1.7;
+      color: #1a1a18;
+      margin-bottom: 0.15in;
+    }
+/*styles for map overlay*/
+	  
+	  .map-wrap {
+  position: relative;
+  width: 100%;
+  background: #fff;
+  border: 0.5px solid #dddbd5;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.map-wrap img {
+  width: 100%;
+  display: block;
+}
+.map-wrap svg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+}
+.map-tooltip {
+  position: absolute;
+  background: #fff;
+  border: 0.5px solid #dddbd5;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  white-space: nowrap;
+  z-index: 10;
+}
+.map-tooltip strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1a1a18;
+}
+.map-tooltip span { color: #888882; }
+.map-legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 0.1in;
+  font-size: 11px;
+  color: #888882;
+}
+	/*stuff from data visualization*/
+	  .stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 2rem;
+}
+.stat-card {
+  background: #f7f5f0;
+  border: 0.5px solid #dddbd5;
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+}
+.stat-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28pt;
+  font-weight: 400;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-lbl {
+  font-size: 9pt;
+  color: #888882;
+  line-height: 1.4;
+}
+.chart-card {
+  background: #fff;
+  border: 0.5px solid #dddbd5;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 1.25rem;
+  font-size: 9pt;
+  color: #666660;
+}
+.legend span { display: flex; align-items: center; gap: 5px; }
+.swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.chart-wrap { position: relative; width: 100%; height: 280px; }
+	/*end stuff from dvis*/  
+    /* Eyebrow label — small all-caps label above a title */
+    .eyebrow {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 9pt;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #67963a;
+      margin-bottom: 0.05in;
+    }
+
+    /* Muted / caption text */
+    .caption {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 9pt;
+      color: #888882;
+      line-height: 1.5;
+      font-style: italic;
+      margin-top: -0.1in;
+      margin-bottom: 0.15in;
+    }
+
+    /* Divider line */
+    hr {
+      border: none;
+      border-top: 0.5px solid #dddbd5;
+      margin: 0.2in 0;
+    }
+	  
+	/* —— Heatmap Styles —— */
+	.heatmap-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 9pt;
+}
+.heatmap-table th {
+  font-weight: 500;
+  font-size: 8pt;
+  color: #888882;
+  padding: 5px 6px;
+  text-align: center;
+  white-space: nowrap;
+}
+.heatmap-table th.row-header {
+  text-align: left;
+  min-width: 120px;
+}
+.heatmap-table td {
+  padding: 5px 6px;
+  text-align: center;
+  border-radius: 4px;
+  font-size: 9pt;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.heatmap-table td.label {
+  text-align: left;
+  font-weight: 400;
+  color: #1a1a18;
+  font-size: 9pt;
+}
+.heatmap-table td.n {
+  color: #888882;
+  font-size: 8pt;
+  font-weight: 400;
+}
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 0.1in;
+  font-size: 8pt;
+  color: #888882;
+}
+.heatmap-legend-grad {
+  width: 100px;
+  height: 8px;
+  border-radius: 3px;
+  background: linear-gradient(to right, #E1F5EE, #1D9E75, #085041);
+}
+.heatmap-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.heatmap-table {
+  font-size: 7.5pt;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.heatmap-table th {
+  font-size: 7pt;
+  padding: 4px 3px;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.3;
+}
+
+.heatmap-table th.row-header {
+  width: 110px;
+}
+
+.heatmap-table td {
+  font-size: 7.5pt;
+  padding: 4px 3px;
+}
+
+.heatmap-table td.label {
+  font-size: 7.5pt;
+  white-space: normal;
+  word-break: break-word;
+}
+
+    /* ── Print styles — hides browser chrome, keeps page breaks clean ── */
+    @media print {
+      body {
+        background: none;
+      }
+      .page {
+        width: 100%;
+        min-height: auto;
+        margin: 0;
+        padding: 1in;
+        box-shadow: none;
+        page-break-after: always;
+      }
+    }
+
+    /*--Horozontal bar graph style--*/
+    .hbar-card {
+  background: #fff;
+  border: 0.5px solid #dddbd5;
+  border-radius: 10px;
+  padding: 0.15in 0.2in 0.12in;
+  margin-bottom: 0.12in;
+}
+.hbar-wrap {
+  position: relative;
+  width: 100%;
+  height: 260px;
+}
+	  
+	  /*–– likert scale --*/
+	  
+	  .diverging-card {
+  background: #fff;
+  border: 0.5px solid #dddbd5;
+  border-radius: 10px;
+  padding: 0.15in 0.2in 0.12in;
+  margin-bottom: 0.12in;
+}
+.diverging-card h4 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9pt;
+  font-weight: 500;
+  color: #1a1a18;
+  margin-bottom: 8px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.diverging-wrap {
+  position: relative;
+  width: 100%;
+}
+.div-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 8pt;
+  color: #666660;
+}
+.div-legend span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.div-legend .sw {
+  width: 9px; height: 9px;
+  border-radius: 2px;
+  display: inline-block;
+}
+	  
+	  /*———footer things——*/
+	  
+	  .page {
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content {
+  flex: 1;
+}
+
+.page-footer {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9pt;
+  color: #888882;
+  border-top: 0.5px solid #dddbd5;
+  padding-top: 0.1in;
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+	  /*-- styles for donut schemes --*/
+	  
+	  .demo-page {
+  display: flex;
+  flex-direction: column;
+  gap: 0.18in;
+}
+.donuts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.15in;
+}
+.donut-card {
+  background: #fff;
+  border: 0.5px solid #dddbd5;
+  border-radius: 10px;
+  padding: 0.18in 0.2in 0.12in;
+}
+.donut-card h4 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9pt;
+  font-weight: 500;
+  color: #1a1a18;
+  margin-bottom: 6px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.donut-wrap {
+  position: relative;
+  width: 100%;
+  height: 160px;
+}
+.stacked-card {
+  background: #fff;
+  border: 0.5px solid #dddbd5;
+  border-radius: 10px;
+  padding: 0.18in 0.2in 0.12in;
+}
+.stacked-card h4 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9pt;
+  font-weight: 500;
+  color: #1a1a18;
+  margin-bottom: 6px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.stacked-wrap {
+  position: relative;
+  width: 100%;
+  height: 210px;
+}
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+  font-size: 8pt;
+  color: #666660;
+}
+.chart-legend span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.chart-legend .sw {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  display: inline-block;
+}
+	  
+/* styles for wordclouds */
+.wc-section {
+  margin-bottom: 0.2in;
+}
+.wc-cloud-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9pt;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #888882;
+  margin-bottom: 6px;
+}
+.wc-box {
+  background: #fff;
+  border: 1px solid #dddbd5;
+  border-radius: 10px;
+  padding: 1rem 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 15px;
+  line-height: 1.8;
+}
